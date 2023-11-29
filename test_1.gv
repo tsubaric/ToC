@@ -1,0 +1,23 @@
+digraph pda {
+rankdir = LR;
+hidden [shape = plaintext, label = ""];
+node [shape = doublecircle];
+0;
+node [shape = circle];
+hidden -> 0;
+0 -> S [label = ". , +!"];
+1 -> A [label = ". , +S"];
+2 -> A [label = ". , +S"];
+2 -> 3 [label = ". , +S"];
+2 -> 4 [label = ". , +S"];
+2 -> 5 [label = ". , +S"];
+2 -> 6 [label = ". , +S"];
+13 -> C [label = ". , +S"];
+14 -> C [label = ". , +S"];
+7 -> S [label = ". , +S"];
+7 -> 8 [label = ". , +S"];
+7 -> 9 [label = ". , +S"];
+10 -> 11 [label = ". , +S"];
+10 -> 12 [label = ". , +S"];
+10 -> S [label = ". , +S"];
+}
