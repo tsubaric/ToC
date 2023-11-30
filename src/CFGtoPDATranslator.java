@@ -6,20 +6,54 @@ import java.io.PrintWriter;
 public class CFGtoPDATranslator {
 
     public static void main(String[] args) {
-        // Example usage:
-        Set<String> nonTerminals = new HashSet<>(Arrays.asList("S", "A", "C"));
-        Set<String> terminals = new HashSet<>(Arrays.asList("a", "b"));
-        Map<String, Set<String>> productions = new HashMap<>();
-        productions.put("S", new HashSet<>(Arrays.asList("Ab", "bA")));
-        productions.put("A", new HashSet<>(Arrays.asList("a", "CAC")));
-        productions.put("C", new HashSet<>(Arrays.asList("a", "b")));
+        Scanner scanner = new Scanner(System.in);
 
-        String startSymbol = "S";
+        // Prompt the user to enter the number of lines in the CFG
+        System.out.print("Enter the number of lines in the CFG: ");
+        int numLines = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        // Example usage:
+        Set<String> nonTerminals = new HashSet<>();
+        Set<String> terminals = new HashSet<>();
+        Map<String, Set<String>> productions = new HashMap<>();
+
+        // Prompt the user to enter the CFG productions
+        for (int i = 0; i < numLines; i++) {
+            System.out.print("Enter production " + (i + 1) + ": ");
+            String production = scanner.nextLine();
+            String[] parts = production.split("->");
+
+            String nonTerminal = parts[0].trim();
+            nonTerminals.add(nonTerminal);
+
+            if (parts.length > 1) {
+                String productionBody = parts[1].trim();
+                productions.put(nonTerminal, new HashSet<>(Arrays.asList(productionBody.split("\\|"))));
+                terminals.addAll(Arrays.asList(productionBody.split("\\s")));
+            } else {
+                productions.put(nonTerminal, new HashSet<>(Collections.singletonList("")));
+            }
+        }
+
+        System.out.print("Enter the start symbol: ");
+        String startSymbol = scanner.nextLine();
 
         ContextFreeGrammar cfg = new ContextFreeGrammar(nonTerminals, terminals, productions, startSymbol);
 
         PushdownAutomaton pda = translateCFGtoPDA(cfg);
         printPDAGraphViz(pda, "test_1.gv");
+
+        // Close the scanner to prevent resource leak
+        scanner.close();
+    }
+
+    private static void addPDATransition(Map<String, Map<String, Map<String, Set<String>>>> transitions,
+                                          String fromState, String toState, String inputSymbol, String stackSymbol) {
+        transitions.putIfAbsent(fromState, new HashMap<>());
+        transitions.get(fromState).putIfAbsent(toState, new HashMap<>());
+        transitions.get(fromState).get(toState).putIfAbsent(inputSymbol, new HashSet<>());
+        transitions.get(fromState).get(toState).get(inputSymbol).add(stackSymbol);
     }
 
     public static void printPDAGraphViz(PushdownAutomaton pda, String fileName) {
@@ -92,7 +126,8 @@ public class CFGtoPDATranslator {
                 for (int i = 0; i < symbols.length; i++) {
                     String symbol = symbols[i];
                     String nextState = (i == symbols.length - 1) ? nonTerminal : "" + productionIndex++;
-                    addPDATransition(pdaTransitions, state, nextState, ".", "+" + symbol);
+                    String stackSymbol = (i == symbols.length - 1) ? "+S" : "+";
+                    addPDATransition(pdaTransitions, state, nextState, ".", stackSymbol + nonTerminal + symbol);
                 }
             }
         }
@@ -109,12 +144,5 @@ public class CFGtoPDATranslator {
         return new PushdownAutomaton(pdaStates, pdaInputAlphabet, pdaStackAlphabet,
                 pdaTransitions, pdaStartState, pdaStartStackSymbol, pdaAcceptingStates);
     }
-
-    private static void addPDATransition(Map<String, Map<String, Map<String, Set<String>>>> transitions,
-                                          String fromState, String toState, String inputSymbol, String stackSymbol) {
-        transitions.putIfAbsent(fromState, new HashMap<>());
-        transitions.get(fromState).putIfAbsent(toState, new HashMap<>());
-        transitions.get(fromState).get(toState).putIfAbsent(inputSymbol, new HashSet<>());
-        transitions.get(fromState).get(toState).get(inputSymbol).add(stackSymbol);
-    }
+    
 }

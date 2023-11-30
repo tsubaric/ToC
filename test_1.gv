@@ -6,10 +6,10 @@ node [shape = doublecircle];
 node [shape = circle];
 hidden -> 0;
 0 -> S [label = ". , +!"];
-1 -> A [label = ". , +a"];
-2 -> A [label = ". , +CAC"];
-3 -> S [label = ". , +Ab"];
-4 -> S [label = ". , +bA"];
-5 -> C [label = ". , +a"];
-6 -> C [label = ". , +b"];
+1 -> A [label = ". , +SAa"];
+2 -> A [label = ". , +SACAC"];
+3 -> S [label = ". , +SSAb"];
+4 -> S [label = ". , +SSbA"];
+5 -> C [label = ". , +SCa"];
+6 -> C [label = ". , +SCb"];
 }
