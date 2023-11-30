@@ -235,10 +235,10 @@ import java.util.*;
 
     private Boolean checkDuplicateInProductionList(Map<String, List<String>> map, String key) {
         Boolean notFound = true;
-        Iterator itr = map.entrySet().iterator();
+        Iterator<Map.Entry<String, List<String>>> itr = map.entrySet().iterator();
         outerloop:
         while (itr.hasNext()) {
-            Map.Entry entry = (Map.Entry) itr.next();
+            Map.Entry<String, List<String>> entry = (Map.Entry<String, List<String>>) itr.next();
             ArrayList<String> productionList = (ArrayList<String>) entry.getValue();
 
             for (int i = 0; i < productionList.size(); i++) {
@@ -264,8 +264,8 @@ import java.util.*;
         Map<String, List<String>> tempList = new LinkedHashMap<>();
 
         while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-            Set set = mapVariableProduction.keySet();
+            Map.Entry<String, List<String>> entry = (Map.Entry<String, List<String>>) it.next();
+            Set<String> set = mapVariableProduction.keySet();
             ArrayList<String> keySet = new ArrayList<String>(set);
             ArrayList<String> productionList = (ArrayList<String>) entry.getValue();
             Boolean found1 = false;
@@ -361,7 +361,7 @@ import java.util.*;
         Iterator<Map.Entry<String, List<String>>> it2 = mapVariableProduction.entrySet().iterator();
         // obtain key that use to eliminate two terminal and above
         while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
+            Map.Entry<String, List<String>> entry = (Map.Entry<String, List<String>>) it.next();
             ArrayList<String> productionRow = (ArrayList<String>) entry.getValue();
             if (productionRow.size() < 2) {
                 keyList.add(entry.getKey().toString());
@@ -370,7 +370,7 @@ import java.util.*;
 
         // find more than three terminal or combination of variable and terminal to eliminate them
         while (it2.hasNext()) {
-            Map.Entry entry = (Map.Entry) it2.next();
+            Map.Entry<String, List<String>> entry = (Map.Entry<String, List<String>>) it2.next();
             ArrayList<String> productionList = (ArrayList<String>) entry.getValue();
             if (productionList.size() > 1) {
                 for (int i = 0; i < productionList.size(); i++) {
@@ -489,7 +489,7 @@ import java.util.*;
         Iterator<Map.Entry<String, List<String>>> it = mapVariableProduction.entrySet().iterator();
         ArrayList<String> keyList = new ArrayList<>();
         while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
+            Map.Entry<String, List<String>> entry = (Map.Entry<String, List<String>>) it.next();
             if(entry.getKey().toString() != "S0"){
                 keyList.add(entry.getKey().toString());
             }
