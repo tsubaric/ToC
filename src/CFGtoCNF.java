@@ -14,7 +14,9 @@ import java.util.*;
     private Map<String, List<String>> mapVariableProduction = new LinkedHashMap<>();
 
     public static void main(String args[]) {
+
         try (Scanner sc = new Scanner(System.in)) {
+
             System.out.print("Enter number of lines:");
             int line_count = sc.nextInt();
             String[] str = new String[line_count];
@@ -22,7 +24,9 @@ import java.util.*;
                 System.out.print("Enter line " + (i + 1) + ": ");
                 str[i] = sc.next();
             }
+
             StringBuilder finalString = new StringBuilder(str[0] + "\n");
+
             for (int i = 1; i < line_count - 1; i++)
                 finalString.append(str[i]).append("\n");
             finalString.append(str[line_count - 1]);
@@ -275,7 +279,7 @@ import java.util.*;
 
                     if (temp.length() == 3) {
 
-                        String newProduction = temp.substring(1, 3); // SA
+                        String newProduction = temp.substring(1, 3);
 
                         if (checkDuplicateInProductionList(tempList, newProduction) && checkDuplicateInProductionList(mapVariableProduction, newProduction)) {
                             found = true;
