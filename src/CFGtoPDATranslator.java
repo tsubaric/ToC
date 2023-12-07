@@ -134,7 +134,7 @@ public class CFGtoPDATranslator {
                     if (i == symbols.length - 1) {
                         stackSymbol = symbol;
                     } else {
-                        stackSymbol = "+" + symbol;
+                        stackSymbol = symbol;
                         // Add transition to read the terminal from the input
                         addPDATransition(pdaTransitions, state, nextState, symbol, stackSymbol);
                     }
