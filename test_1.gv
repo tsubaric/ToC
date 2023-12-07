@@ -2,14 +2,20 @@ digraph pda {
 rankdir = LR;
 hidden [shape = plaintext, label = ""];
 node [shape = doublecircle];
-0;
+3;
 node [shape = circle];
 hidden -> 0;
-0 -> S [label = ". , +!"];
-1 -> A [label = ". , +SAa"];
-2 -> A [label = ". , +SACAC"];
-3 -> S [label = ". , +SSAb"];
-4 -> S [label = ". , +SSbA"];
-5 -> C [label = ". , +SCa"];
-6 -> C [label = ". , +SCb"];
+0 -> 1 [label = ". , +!"];
+1 -> S [label = ". , +a"];
+2 -> S [label = ". , -b"];
+3 -> S [label = ". , +a"];
+3 -> 4 [label = "a , ++a"];
+3 -> 4 [label = ". , ++a"];
+3 -> 5 [label = "S , ++S"];
+3 -> 5 [label = ". , ++S"];
+6 -> S [label = ". , +b"];
+6 -> 7 [label = "b , ++b"];
+6 -> 7 [label = ". , ++b"];
+6 -> 8 [label = "S , ++S"];
+6 -> 8 [label = ". , ++S"];
 }

@@ -63,7 +63,7 @@ public class PushdownAutomaton {
         this.transitions = transitions;
     }
 
-     public void addTransition(String fromState, String toState, String inputSymbol, Set<String> stackSymbols) {
+    public void addTransition(String fromState, String toState, String inputSymbol, Set<String> stackSymbols) {
         // Check if fromState exists in transitions
         transitions.putIfAbsent(fromState, new HashMap<>());
 

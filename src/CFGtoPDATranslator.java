@@ -44,7 +44,6 @@ public class CFGtoPDATranslator {
         PushdownAutomaton pda = translateCFGtoPDA(cfg);
         printPDAGraphViz(pda, "test_1.gv");
 
-        // Close the scanner to prevent resource leak
         scanner.close();
     }
 
@@ -82,7 +81,11 @@ public class CFGtoPDATranslator {
                         String inputSymbol = toTransition.getKey();
 
                         for (String stackSymbol : toTransition.getValue()) {
-                            writer.println(fromState + " -> " + toState + " [label = \"" + inputSymbol + " , " + stackSymbol + "\"];");
+                            // Determine whether to add "+" or "-" based on the fromState
+                            String stackOperation = (fromState.equals("2")) ? "-" : "+";
+                            
+                            // Switched inputSymbol and toState places in the label
+                            writer.println(fromState + " -> " + toState + " [label = \"" + inputSymbol + " , " + stackOperation + stackSymbol + "\"];");
                         }
                     }
                 }
@@ -99,12 +102,12 @@ public class CFGtoPDATranslator {
         // Initialize PDA components
         Set<String> pdaStates = new HashSet<>();
         Set<String> pdaInputAlphabet = new HashSet<>(cfg.getTerminals());
-        Set<String> pdaStackAlphabet = new HashSet<>(cfg.getTerminals());
+        Set<String> pdaStackAlphabet = new HashSet<>();
         pdaStackAlphabet.add("");  // Include the empty stack symbol
         Map<String, Map<String, Map<String, Set<String>>>> pdaTransitions = new HashMap<>();
         String pdaStartState = "0";
-        String pdaStartStackSymbol = "+!";
-        Set<String> pdaAcceptingStates = new HashSet<>();
+        String pdaStartStackSymbol = "!";
+        Set<String> pdaAcceptingStates = new HashSet<>(); // Change accepting state to 3
     
         // Create a new PDA state for each CFG non-terminal
         for (String nonTerminal : cfg.getNonTerminals()) {
@@ -126,8 +129,18 @@ public class CFGtoPDATranslator {
                 for (int i = 0; i < symbols.length; i++) {
                     String symbol = symbols[i];
                     String nextState = (i == symbols.length - 1) ? nonTerminal : "" + productionIndex++;
-                    String stackSymbol = (i == symbols.length - 1) ? "+S" : "+";
-                    addPDATransition(pdaTransitions, state, nextState, ".", stackSymbol + nonTerminal + symbol);
+                    String stackSymbol;
+    
+                    if (i == symbols.length - 1) {
+                        stackSymbol = symbol;
+                    } else {
+                        stackSymbol = "+" + symbol;
+                        // Add transition to read the terminal from the input
+                        addPDATransition(pdaTransitions, state, nextState, symbol, stackSymbol);
+                    }
+    
+                    // Add transition to pop the stack symbol
+                    addPDATransition(pdaTransitions, state, nextState, ".", stackSymbol);
                 }
             }
         }
@@ -135,14 +148,13 @@ public class CFGtoPDATranslator {
         // Set the start state and stack symbol
         pdaStates.add(pdaStartState);
         pdaStackAlphabet.add(pdaStartStackSymbol);
-        addPDATransition(pdaTransitions, pdaStartState, cfg.getStartSymbol(), ".", pdaStartStackSymbol);
+        addPDATransition(pdaTransitions, pdaStartState, "1", ".", pdaStartStackSymbol);
     
         // Set the accepting states
-        pdaAcceptingStates.add(pdaStartState);
+        pdaAcceptingStates.add("3"); // Change accepting state to 3
     
         // Create the Pushdown Automaton
         return new PushdownAutomaton(pdaStates, pdaInputAlphabet, pdaStackAlphabet,
                 pdaTransitions, pdaStartState, pdaStartStackSymbol, pdaAcceptingStates);
     }
-    
 }
