@@ -5,9 +5,6 @@ import java.io.PrintWriter;
 
 public class CFGtoPDATranslator {
 
-    // Declare nonTerminal and productionIndex as class variables
-    private static int productionIndex;
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -32,10 +29,13 @@ public class CFGtoPDATranslator {
 
             if (parts.length > 1) {
                 String productionBody = parts[1].trim();
+                productions.put(nonTerminal, productions.getOrDefault(nonTerminal, new HashSet<>())); // added 
                 productions.put(nonTerminal, new HashSet<>(Arrays.asList(productionBody.split("\\|"))));
                 terminals.addAll(Arrays.asList(productionBody.split("\\s")));
             } else {
-                productions.put(nonTerminal, new HashSet<>(Collections.singletonList("")));
+                //productions.put(nonTerminal, new HashSet<>(Collections.singletonList("")));
+                productions.put(nonTerminal, productions.getOrDefault(nonTerminal, new HashSet<>())); // added 
+                productions.get(nonTerminal).add(""); // added 
             }
         }
 
@@ -119,37 +119,46 @@ public class CFGtoPDATranslator {
         String pdaStartState = "0";
         String pdaStartStackSymbol = "!";
         Set<String> pdaAcceptingStates = new HashSet<>();
-    
-        // Create a new PDA state for each CFG non-terminal
-        for (String nonTerminal : cfg.getNonTerminals()) {
-            pdaStates.add(nonTerminal);
-        }
-    
 
-        for (Map.Entry<String, Set<String>> entry : cfg.getProductions().entrySet()) {
-            String nonTerminal = entry.getKey();
-            Set<String> productionSet = entry.getValue();
-    
-            for (String production : productionSet) {
-                String state = "" + productionIndex++;
-                pdaStates.add(state);
-    
+        for (String nonTerminal : cfg.getNonTerminals()) {
+            if (cfg.getStartSymbol().equals(nonTerminal)) {
+                // Add transition from start state to the first state of the first production
+                addPDATransition(pdaTransitions, pdaStartState, "1", ".", nonTerminal);
+            }
+            
+            pdaStates.add(nonTerminal);
+            
+            int stateIndex = 1;
+            
+            for (String production : cfg.getProductions().get(nonTerminal)) {
                 // Add transitions for the production
-                addProductionTransitions(pdaTransitions, state, production, nonTerminal);
+                addProductionTransitions(pdaTransitions, stateIndex, production, nonTerminal);
+                
+                // If it's not the last production, add a transition to the next state
+                if (stateIndex < cfg.getProductions().get(nonTerminal).size()) {
+                    addPDATransition(pdaTransitions, stateIndex + "", stateIndex + 1 + "", ".", nonTerminal);
+                }
+                
+                stateIndex++;
+            }
+            
+            // If the non-terminal has productions, mark the last state as accepting
+            if (cfg.getProductions().containsKey(nonTerminal) && !cfg.getProductions().get(nonTerminal).isEmpty()) {
+                pdaAcceptingStates.add(stateIndex + "");
             }
         }
-    
+
         // Set the start state and stack symbol
         pdaStates.add(pdaStartState);
         pdaStackAlphabet.add(pdaStartStackSymbol);
-    
+
         // Create the Pushdown Automaton
         return new PushdownAutomaton(pdaStates, pdaInputAlphabet, pdaStackAlphabet,
                 pdaTransitions, pdaStartState, pdaStartStackSymbol, pdaAcceptingStates);
     }
 
     private static void addProductionTransitions(Map<String, Map<String, Map<String, Set<String>>>> transitions,
-                                              String state, String production, String stackSymbol) {
+                                                 int stateIndex, String production, String stackSymbol) {
         String[] symbols = production.split(" ");
 
         // Loop through the symbols in the production
@@ -158,18 +167,75 @@ public class CFGtoPDATranslator {
             String nextState;
 
             if (i == symbols.length - 1) {
-                nextState = "" + productionIndex++;
+                nextState = "0"; // Transition back to start state
+
                 // Add transition for the last symbol to transition back to state 0
-                addPDATransition(transitions, nextState, "0", ".", stackSymbol);
+                addPDATransition(transitions, stateIndex + "", nextState, ".", stackSymbol);
             } else {
-                nextState = "" + productionIndex++;
+                nextState = (stateIndex + 1) + ""; // Move to the next state
             }
 
-            // Add transition to read the terminal from the input
-            addPDATransition(transitions, state, nextState, ".", symbol);
+            // Add transition to read the terminal or non-terminal from the input
+            addPDATransition(transitions, stateIndex + "", nextState, ".", symbol);
 
             // Use the next state for the next iteration
-            state = nextState;
+            stateIndex++;
         }
     }
 }
+
+    
+        // Create a new PDA state for each CFG non-terminal
+    //     for (String nonTerminal : cfg.getNonTerminals()) {
+    //         pdaStates.add(nonTerminal);
+    //     }
+    
+
+    //     for (Map.Entry<String, Set<String>> entry : cfg.getProductions().entrySet()) {
+    //         String nonTerminal = entry.getKey();
+    //         Set<String> productionSet = entry.getValue();
+    
+    //         for (String production : productionSet) {
+    //             String state = "" + productionIndex++;
+    //             pdaStates.add(state);
+    
+    //             // Add transitions for the production
+    //             addProductionTransitions(pdaTransitions, state, production, nonTerminal);
+    //         }
+    //     }
+    
+    //     // Set the start state and stack symbol
+    //     pdaStates.add(pdaStartState);
+    //     pdaStackAlphabet.add(pdaStartStackSymbol);
+    
+    //     // Create the Pushdown Automaton
+    //     return new PushdownAutomaton(pdaStates, pdaInputAlphabet, pdaStackAlphabet,
+    //             pdaTransitions, pdaStartState, pdaStartStackSymbol, pdaAcceptingStates);
+    // }
+
+    // private static void addProductionTransitions(Map<String, Map<String, Map<String, Set<String>>>> transitions,
+    //                                           String state, String production, String stackSymbol) {
+    //     String[] symbols = production.split(" ");
+
+    //     // Loop through the symbols in the production
+    //     for (int i = 0; i < symbols.length; i++) {
+    //         String symbol = symbols[i];
+    //         String nextState;
+
+    //         if (i == symbols.length - 1) {
+    //             nextState = "" + productionIndex++;
+
+    //             // Add transition for the last symbol to transition back to state 0
+    //             addPDATransition(transitions, nextState, "0", ".", stackSymbol);
+    //         } else {
+    //             nextState = "" + productionIndex++;
+    //         }
+
+    //         // Add transition to read the terminal from the input
+    //         addPDATransition(transitions, state, nextState, ".", symbol);
+
+    //         // Use the next state for the next iteration
+    //         state = nextState;
+    //     }
+    // }
+    //}
