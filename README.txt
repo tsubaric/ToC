@@ -32,9 +32,6 @@
 
 4. translateCFGtoPDA method in CFGtoPDATranslator:
     - Translates a given CFG to a PDA.
-
-5. addProductionTransitions method in CFGtoPDATranslator:
-    - Adds transitions based on the CFG productions to the PDA.
 -------------------------------------------
 * CFGtoCNF class:
 - ....

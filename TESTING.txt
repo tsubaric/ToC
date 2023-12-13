@@ -1,1 +1,118 @@
-Current Testing outputs...
+Testing CFG to PDA Converter
+-------------------------------------------
+Test 1 (Palindrome):
+Here is an Example of our run
+
+Enter the number of lines in the CFG: 1
+Enter production 1: S->a S a|b S b|a|b| 
+Enter the start symbol: S
+Translating CFG to PDA...
+
+It is currently returning...
+
+digraph pda {
+rankdir = LR;
+hidden [shape = plaintext, label = ""];
+node [shape = doublecircle];
+3;
+node [shape = circle];
+hidden -> 0;
+0 -> 1 [label = ". , +!"];
+0 -> 2 [label = ". , +a"];
+1 -> 2 [label = ". , +S"];
+2 -> 2 [label = "a , -a"];
+2 -> 2 [label = "b , -b"];
+2 -> 2 [label = ". , -b"];
+2 -> 2 [label = ". , -S"];
+2 -> 3 [label = ". , -!"];
+4 -> 5 [label = ". , +a"];
+5 -> 6 [label = ". , +S"];
+6 -> 2 [label = ". , +a"];
+8 -> 9 [label = ". , +b"];
+9 -> 10 [label = ". , +S"];
+10 -> 2 [label = ". , +b"];
+}
+
+It should be returning....
+
+digraph pda {
+rankdir = LR;
+hidden [shape = plaintext, label = ""];
+node [shape = doublecircle];
+3;
+node [shape = circle];
+hidden -> 0;
+2 -> 2 [label = "'a', -a"];
+2 -> 2 [label = "'b', -b"];
+0 -> 1 [label = ". , +!"];
+1 -> 2 [label = ". , +S"];
+2 -> 3 [label = ". , -!"];
+2 -> 2 [label = ". , -S"];
+2 -> 4 [label = ". , -S"];
+4 -> 5 [label = ". , +a"];
+5 -> 6 [label = ". , +S"];
+6 -> 2 [label = ". , +a"];
+2 -> 7 [label = ". , -S"];
+7 -> 8 [label = ". , +b"];
+8 -> 9 [label = ". , +S"];
+9 -> 2 [label = ". , +b"];
+}
+-------------------------------------------
+Test 2 (October 12th In-Class Example):
+Here is an Example of our run
+
+Enter the number of lines in the CFG: 1
+Enter production 1: S->a S a|b S b|a|b| 
+Enter the start symbol: S
+Translating CFG to PDA...
+
+It is currently returning...
+
+digraph pda {
+rankdir = LR;
+hidden [shape = plaintext, label = ""];
+node [shape = doublecircle];
+3;
+node [shape = circle];
+hidden -> 0;
+0 -> 1 [label = ". , +!"];
+0 -> 2 [label = ". , +a"];
+1 -> 2 [label = ". , +S"];
+2 -> 2 [label = "a , -a"];
+2 -> 2 [label = "b , -b"];
+2 -> 2 [label = ". , -b"];
+2 -> 2 [label = ". , -S"];
+2 -> 3 [label = ". , -!"];
+4 -> 5 [label = ". , +a"];
+5 -> 6 [label = ". , +S"];
+6 -> 2 [label = ". , +a"];
+8 -> 9 [label = ". , +b"];
+9 -> 10 [label = ". , +S"];
+10 -> 2 [label = ". , +b"];
+}
+
+It should be returning....
+
+digraph pda {
+rankdir = LR;
+hidden [shape = plaintext, label = ""];
+node [shape = doublecircle];
+3;
+node [shape = circle];
+hidden -> 0;
+2 -> 2 [label = "'a', -a"];
+2 -> 2 [label = "'b', -b"];
+0 -> 1 [label = ". , +!"];
+1 -> 2 [label = ". , +S"];
+2 -> 3 [label = ". , -!"];
+2 -> 2 [label = ". , -S"];
+2 -> 4 [label = ". , -S"];
+4 -> 5 [label = ". , +a"];
+5 -> 6 [label = ". , +S"];
+6 -> 2 [label = ". , +a"];
+2 -> 7 [label = ". , -S"];
+7 -> 8 [label = ". , +b"];
+8 -> 9 [label = ". , +S"];
+9 -> 2 [label = ". , +b"];
+}
+-------------------------------------------
