@@ -105,14 +105,14 @@ public class CFGtoPDATranslator {
         String pdaStartStackSymbol = "!"; // Change this to whatever the initial stack symbol should be
         Set<String> pdaAcceptingStates = new HashSet<>();
     
-        int stateIndex = 1; // Start stateIndex from 1
+        int stateIndex = 0; // Start stateIndex from 1
     
         for (Map.Entry<String, Set<String>> entry : cfg.getProductions().entrySet()) {
             String nonTerminal = entry.getKey();
             Set<String> productionSet = entry.getValue();
     
             for (String production : productionSet) {
-                String currentState = stateIndex + "";
+                String currentState = (stateIndex) + "";
                 String nextState = (stateIndex + 1) + "";
     
                 // Add transition for each symbol in the production
@@ -124,15 +124,17 @@ public class CFGtoPDATranslator {
                         nextState = "2";
                         addPDATransition(pdaTransitions, currentState, nextState, ".", symbol);
                     } else {
+                        currentState = (stateIndex) + "";
                         nextState = (stateIndex + 1) + "";
                     }
-    
+                    
                     addPDATransition(pdaTransitions, currentState, nextState, ".", symbol);
     
                     // Loop back to state 2 with the corresponding stack symbol
                     if (i == symbols.length - 1) {
                         addPDATransition(pdaTransitions, nextState, "2", symbol, symbol);
                     }
+                    currentState = nextState;
                     stateIndex++;
                 }
     
