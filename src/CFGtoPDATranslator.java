@@ -150,10 +150,6 @@ public class CFGtoPDATranslator {
                 stateIndex++;
             }
     
-            // If the non-terminal has productions, mark the last state as accepting
-            // if (!productionSet.isEmpty()) {
-            //     pdaAcceptingStates.add((stateIndex + stateIndexOffset) + "");
-            // }
             if (!productionSet.isEmpty()) {
                 int lastStateIndex = stateIndex + stateIndexOffset;
                 pdaAcceptingStates.add(lastStateIndex + "");
