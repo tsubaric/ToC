@@ -34,7 +34,19 @@
     - Translates a given CFG to a PDA.
 -------------------------------------------
 * CFGtoCNF class:
-- ....
+
+1. User Input and CFG Representation:
+- The program takes the number of lines as input, where each line represents a production rule in the CFG.
+- The CFG rules are stored in a map named mapVariableProduction, where each variable maps to a list of its productions.
+
+2. CFG to CNF Conversion:
+- The convertCFGtoCNF method is called to start the conversion process.
+- The CFG is transformed to CNF through several steps:
+    + Removal of epsilon productions (removeEpselon method).
+    + Removal of single-variable productions (eliminateSingleVariable method).
+    + Ensuring each production has only two variables or one terminal (onlyTwoTerminalandOneVariable method).
+    + Handling three-terminal productions (eliminateThreeTerminal method).
+    + Removing duplicate key-value pairs (removeDuplicateKeyValue method).
 -------------------------------------------
 
 Status:
