@@ -46,14 +46,6 @@ public class CFGtoPDATranslator {
         scanner.close();
     }
 
-    private static void addPDATransition(Map<String, Map<String, Map<String, Set<String>>>> transitions,
-                                          String fromState, String toState, String inputSymbol, String stackSymbol) {
-        transitions.putIfAbsent(fromState, new HashMap<>());
-        transitions.get(fromState).putIfAbsent(toState, new HashMap<>());
-        transitions.get(fromState).get(toState).putIfAbsent(inputSymbol, new HashSet<>());
-        transitions.get(fromState).get(toState).get(inputSymbol).add(stackSymbol);
-    }
-
     public static void printPDAGraphViz(PushdownAutomaton pda, String fileName) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             writer.println("digraph pda {");
@@ -110,63 +102,72 @@ public class CFGtoPDATranslator {
         Set<String> pdaStackAlphabet = new HashSet<>();
         Map<String, Map<String, Map<String, Set<String>>>> pdaTransitions = new HashMap<>();
         String pdaStartState = "0";
-        String pdaStartStackSymbol = "!";
+        String pdaStartStackSymbol = "!"; // Change this to whatever the initial stack symbol should be
         Set<String> pdaAcceptingStates = new HashSet<>();
     
-        for (String nonTerminal : cfg.getNonTerminals()) {
-            pdaStates.add(nonTerminal);
-        }
-    
-        int stateIndex = 2; // Set stateIndex to 2 directly, without an offset
+        int stateIndex = 1; // Start stateIndex from 1
     
         for (Map.Entry<String, Set<String>> entry : cfg.getProductions().entrySet()) {
             String nonTerminal = entry.getKey();
             Set<String> productionSet = entry.getValue();
     
             for (String production : productionSet) {
-                String currentState = (stateIndex) + "";
-                String nextState = (stateIndex + 2) + "";
-                addProductionTransitions(pdaTransitions, stateIndex, production, nonTerminal);
+                String currentState = stateIndex + "";
+                String nextState = (stateIndex + 1) + "";
     
-                if (stateIndex < productionSet.size()) {
-                    addPDATransition(pdaTransitions, currentState, nextState, ".", nonTerminal);
+                // Add transition for each symbol in the production
+                String[] symbols = production.split("\\s+");
+                for (int i = 0; i < symbols.length; i++) {
+                    String symbol = symbols[i];
+    
+                    if (i == symbols.length - 1) {
+                        nextState = "2";
+                        addPDATransition(pdaTransitions, currentState, nextState, ".", symbol);
+                    } else {
+                        nextState = (stateIndex + 1) + "";
+                    }
+    
+                    addPDATransition(pdaTransitions, currentState, nextState, ".", symbol);
+    
+                    // Loop back to state 2 with the corresponding stack symbol
+                    if (i == symbols.length - 1) {
+                        addPDATransition(pdaTransitions, nextState, "2", ".", symbol);
+                    }
+                    stateIndex++;
                 }
     
-                stateIndex++;
-            }
+                // Transition from state 2 to the next state with the corresponding stack symbol
+                addPDATransition(pdaTransitions, "2", nextState, ".", nonTerminal);
+                pdaStackAlphabet.add(nonTerminal);
+                pdaStates.add(nonTerminal);
     
-            if (!productionSet.isEmpty()) {
-                pdaAcceptingStates.add("3"); // Set accepting state to "3"
-                addPDATransition(pdaTransitions, "2", "3", ".", pdaStartStackSymbol);
+                stateIndex++;
             }
         }
     
         pdaStates.add(pdaStartState);
         pdaStackAlphabet.add(pdaStartStackSymbol);
     
-        addPDATransition(pdaTransitions, "0", "1", ".", pdaStartStackSymbol);
+        // Add transitions for the start symbol
+        addPDATransition(pdaTransitions, pdaStartState, "1", ".", pdaStartStackSymbol);
         addPDATransition(pdaTransitions, "1", "2", ".", cfg.getStartSymbol());
+        addPDATransition(pdaTransitions, "2", "3", ".", pdaStartStackSymbol);
+    
+        // Set accepting state to "3"
+        pdaAcceptingStates.add("3");
+    
+        // Ensure that state "3" has transitions
+        addPDATransition(pdaTransitions, "3", "3", ".", pdaStartStackSymbol);
     
         return new PushdownAutomaton(pdaStates, pdaInputAlphabet, pdaStackAlphabet,
                 pdaTransitions, pdaStartState, pdaStartStackSymbol, pdaAcceptingStates);
     }
     
-    private static void addProductionTransitions(Map<String, Map<String, Map<String, Set<String>>>> transitions,
-                                              int stateIndex, String production, String stackSymbol) {
-        String[] symbols = production.split(" ");
-    
-        for (int i = 0; i < symbols.length; i++) {
-            String symbol = symbols[i];
-            String nextState;
-    
-            if (i == symbols.length - 1) {
-                nextState = "2";
-                addPDATransition(transitions, stateIndex + "", nextState, ".", symbol);
-            } else {
-                nextState = (stateIndex + 1) + "";
-            }
-            addPDATransition(transitions, stateIndex + "", nextState, ".", symbol);
-            stateIndex++;
-        }
+    private static void addPDATransition(Map<String, Map<String, Map<String, Set<String>>>> transitions,
+                                          String fromState, String toState, String inputSymbol, String stackSymbol) {
+        transitions.putIfAbsent(fromState, new HashMap<>());
+        transitions.get(fromState).putIfAbsent(toState, new HashMap<>());
+        transitions.get(fromState).get(toState).putIfAbsent(inputSymbol, new HashSet<>());
+        transitions.get(fromState).get(toState).get(inputSymbol).add(stackSymbol);
     }
 }
