@@ -127,3 +127,50 @@ hidden -> 0;
 2 -> 13 [label = ". , -C"];
 13 -> 2 [label = ". , +b"];
 -------------------------------------------
+Testing CFG to CNF Converter:
+***Test 3 (In-Class 10/17):***
+-Here is an Example of our run -->
+
+Enter number of lines:2
+Enter line 1: T->T*A|A
+Enter line 2: A->(T)|x
+
+It is currently returning
+
+Remove Epselon....
+T -> [T*A, A]
+A -> [(T), x]
+ 
+Remove Duplicate Key Value ... 
+T -> [T*A, A]
+A -> [(T), x]
+ 
+Remove Single Variable in Every Production ... 
+T -> [T*A, (T), x]
+A -> [(T), x]
+ 
+Assign new variable for two non-terminal or one terminal ... 
+T -> [T*A, (T), x]
+A -> [(T), x]
+G -> [*A]
+H -> [T)]
+ 
+Replace two terminal variable with new variable ... 
+T -> [TG, (H, x]
+A -> [(H, x]
+G -> [*A]
+H -> [T)]
+
+We would have liked it to return like...
+
+B -> *
+C -> (
+D -> )
+E -> x
+T -> x
+A -> x
+T -> T Z
+Z -> B A
+T -> C Y
+Y -> T D
+A -> C Y

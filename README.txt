@@ -3,7 +3,7 @@
 * Tooling:
 - The implementation is in Java. No additional libraries need to be installed as it uses standard Java libraries.
 
-* Sources:
+* Sources: Class Notes In-class examples from October 12th and 17th, and stackOverflow
 
 * Required functions:
 -------------------------------------------
