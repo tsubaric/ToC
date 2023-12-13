@@ -75,6 +75,10 @@ public class CFGtoPDATranslator {
                     continue;
                 }
 
+                if (fromState.equals("3")) {
+                    continue; // Skip transitions from accepting state "3"
+                }
+
                 for (Map.Entry<String, Map<String, Set<String>>> inputTransition : entry.getValue().entrySet()) {
                     String toState = inputTransition.getKey();
 
@@ -120,8 +124,8 @@ public class CFGtoPDATranslator {
             Set<String> productionSet = entry.getValue();
     
             for (String production : productionSet) {
-                String currentState = stateIndex + "";
-                String nextState = (stateIndex + 1) + "";
+                String currentState = (stateIndex) + "";
+                String nextState = (stateIndex + 2) + "";
                 addProductionTransitions(pdaTransitions, stateIndex, production, nonTerminal);
     
                 if (stateIndex < productionSet.size()) {
