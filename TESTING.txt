@@ -17,20 +17,19 @@ node [shape = doublecircle];
 3;
 node [shape = circle];
 hidden -> 0;
+11 -> 2 [label = ". , +b"];
 0 -> 1 [label = ". , +!"];
-0 -> 2 [label = ". , +a"];
+1 -> 2 [label = ". , +a"];
 1 -> 2 [label = ". , +S"];
 2 -> 2 [label = "a , -a"];
 2 -> 2 [label = "b , -b"];
-2 -> 2 [label = ". , -b"];
 2 -> 2 [label = ". , -S"];
 2 -> 3 [label = ". , -!"];
-4 -> 5 [label = ". , +a"];
-5 -> 6 [label = ". , +S"];
-6 -> 2 [label = ". , +a"];
-8 -> 9 [label = ". , +b"];
-9 -> 10 [label = ". , +S"];
-10 -> 2 [label = ". , +b"];
+5 -> 6 [label = ". , +a"];
+6 -> 7 [label = ". , +S"];
+7 -> 2 [label = ". , +a"];
+9 -> 10 [label = ". , +b"];
+10 -> 11 [label = ". , +S"];
 }
 
 It should be returning....
@@ -61,10 +60,11 @@ hidden -> 0;
 Test 2 (October 12th In-Class Example):
 Here is an Example of our run
 
-Enter the number of lines in the CFG: 1
-Enter production 1: S->a S a|b S b|a|b| 
+Enter the number of lines in the CFG: 3
+Enter production 1: S->A b|b A
+Enter production 2: A->C A C|a
+Enter production 3: C->a|b
 Enter the start symbol: S
-Translating CFG to PDA...
 
 It is currently returning...
 
@@ -75,20 +75,25 @@ node [shape = doublecircle];
 3;
 node [shape = circle];
 hidden -> 0;
+11 -> 2 [label = ". , +b"];
 0 -> 1 [label = ". , +!"];
-0 -> 2 [label = ". , +a"];
+1 -> 2 [label = ". , +a"];
 1 -> 2 [label = ". , +S"];
 2 -> 2 [label = "a , -a"];
+2 -> 2 [label = "A , -A"];
 2 -> 2 [label = "b , -b"];
-2 -> 2 [label = ". , -b"];
+2 -> 2 [label = "C , -C"];
+2 -> 2 [label = ". , -A"];
 2 -> 2 [label = ". , -S"];
+2 -> 2 [label = ". , -C"];
 2 -> 3 [label = ". , -!"];
-4 -> 5 [label = ". , +a"];
-5 -> 6 [label = ". , +S"];
-6 -> 2 [label = ". , +a"];
-8 -> 9 [label = ". , +b"];
-9 -> 10 [label = ". , +S"];
-10 -> 2 [label = ". , +b"];
+13 -> 2 [label = ". , +a"];
+4 -> 5 [label = ". , +A"];
+15 -> 2 [label = ". , +b"];
+5 -> 2 [label = ". , +C"];
+7 -> 8 [label = ". , +b"];
+8 -> 2 [label = ". , +A"];
+10 -> 11 [label = ". , +A"];
 }
 
 It should be returning....
