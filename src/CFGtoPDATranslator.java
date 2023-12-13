@@ -131,7 +131,7 @@ public class CFGtoPDATranslator {
     
                     // Loop back to state 2 with the corresponding stack symbol
                     if (i == symbols.length - 1) {
-                        addPDATransition(pdaTransitions, nextState, "2", ".", symbol);
+                        addPDATransition(pdaTransitions, nextState, "2", symbol, symbol);
                     }
                     stateIndex++;
                 }
