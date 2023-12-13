@@ -28,7 +28,7 @@ public class CFGtoPDATranslator {
                 String productionBody = parts[1].trim();
                 productions.put(nonTerminal, productions.getOrDefault(nonTerminal, new HashSet<>()));
                 productions.put(nonTerminal, new HashSet<>(Arrays.asList(productionBody.split("\\|"))));
-                terminals.addAll(Arrays.asList(productionBody.split("\\s")));
+                //terminals.addAll(Arrays.asList(productionBody.split("\\s")));
             } else {
                 productions.put(nonTerminal, productions.getOrDefault(nonTerminal, new HashSet<>()));
                 productions.get(nonTerminal).add(""); 
