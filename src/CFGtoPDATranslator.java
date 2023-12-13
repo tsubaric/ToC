@@ -105,7 +105,7 @@ public class CFGtoPDATranslator {
         Set<String> pdaInputAlphabet = new HashSet<>(cfg.getTerminals());
         Set<String> pdaStackAlphabet = new HashSet<>();
         Map<String, Map<String, Map<String, Set<String>>>> pdaTransitions = new HashMap<>();
-        String pdaStartState = "2";
+        String pdaStartState = "0";
         String pdaStartStackSymbol = "!";
         Set<String> pdaAcceptingStates = new HashSet<>();
     
@@ -137,14 +137,12 @@ public class CFGtoPDATranslator {
             }
         }
     
-        // Set the start state and stack symbol
         pdaStates.add(pdaStartState);
         pdaStackAlphabet.add(pdaStartStackSymbol);
     
         addPDATransition(pdaTransitions, "0", "1", ".", pdaStartStackSymbol);
         addPDATransition(pdaTransitions, "1", "2", ".", cfg.getStartSymbol());
     
-        // Create the Pushdown Automaton
         return new PushdownAutomaton(pdaStates, pdaInputAlphabet, pdaStackAlphabet,
                 pdaTransitions, pdaStartState, pdaStartStackSymbol, pdaAcceptingStates);
     }
