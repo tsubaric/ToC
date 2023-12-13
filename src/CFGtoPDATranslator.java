@@ -41,7 +41,7 @@ public class CFGtoPDATranslator {
         ContextFreeGrammar cfg = new ContextFreeGrammar(nonTerminals, terminals, productions, startSymbol);
 
         PushdownAutomaton pda = translateCFGtoPDA(cfg);
-        printPDAGraphViz(pda, "test.gv");
+        printPDAGraphViz(pda, "output.gv");
 
         scanner.close();
     }
