@@ -1,7 +1,7 @@
 Testing CFG to PDA Converter
 -------------------------------------------
-Test 1 (Palindrome):
-Here is an Example of our run
+***Test 1 (Palindrome):***
+-Here is an Example of our run -->
 
 Enter the number of lines in the CFG: 1
 Enter production 1: S->a S a|b S b|a|b| 
@@ -57,8 +57,8 @@ hidden -> 0;
 9 -> 2 [label = ". , +b"];
 }
 -------------------------------------------
-Test 2 (October 12th In-Class Example):
-Here is an Example of our run
+***Test 2 (October 12th In-Class Example):***
+- Here is an Example of our run -->
 
 Enter the number of lines in the CFG: 3
 Enter production 1: S->A b|b A
@@ -97,7 +97,6 @@ hidden -> 0;
 }
 
 It should be returning....
-
 digraph pda {
 rankdir = LR;
 hidden [shape = plaintext, label = ""];
@@ -105,19 +104,75 @@ node [shape = doublecircle];
 3;
 node [shape = circle];
 hidden -> 0;
-2 -> 2 [label = "'a', -a"];
-2 -> 2 [label = "'b', -b"];
+2 -> 2 [label = "a , -a"];
+2 -> 2 [label = "b , -b"];
+2 -> 2 [label = ". , -S"];
 0 -> 1 [label = ". , +!"];
 1 -> 2 [label = ". , +S"];
 2 -> 3 [label = ". , -!"];
-2 -> 2 [label = ". , -S"];
 2 -> 4 [label = ". , -S"];
-4 -> 5 [label = ". , +a"];
-5 -> 6 [label = ". , +S"];
-6 -> 2 [label = ". , +a"];
-2 -> 7 [label = ". , -S"];
-7 -> 8 [label = ". , +b"];
-8 -> 9 [label = ". , +S"];
-9 -> 2 [label = ". , +b"];
-}
+4 -> 5 [label = ". , +A"];
+5 -> 2 [label = ". , +b"];
+2 -> 6 [label = ". , -S"];
+6 -> 7 [label = ". , +b"];
+7 -> 2 [label = ". , +A"];
+2 -> 8 [label = ". , -A"];
+8 -> 9 [label = ". , +C"];
+9 -> 10 [label = ". , +A"];
+10 -> 2 [label = ". , +C"];
+2 -> 11 [label = ". , -A"];
+11 -> 2 [label = ". , +a"];
+2 -> 12 [label = ". , -C"];
+12 -> 2 [label = ". , +a"];
+2 -> 13 [label = ". , -C"];
+13 -> 2 [label = ". , +b"];
+-------------------------------------------
+-------------------------------------------
+Testing CFG to CNF Converter:
+***Test 3 (In-Class 10/17):***
+-Here is an Example of our run -->
+
+Enter number of lines:2
+Enter line 1: T->T*A|A
+Enter line 2: A->(T)|x
+
+It is currently returning
+
+Remove Epselon....
+T -> [T*A, A]
+A -> [(T), x]
+ 
+Remove Duplicate Key Value ... 
+T -> [T*A, A]
+A -> [(T), x]
+ 
+Remove Single Variable in Every Production ... 
+T -> [T*A, (T), x]
+A -> [(T), x]
+ 
+Assign new variable for two non-terminal or one terminal ... 
+T -> [T*A, (T), x]
+A -> [(T), x]
+G -> [*A]
+H -> [T)]
+ 
+Replace two terminal variable with new variable ... 
+T -> [TG, (H, x]
+A -> [(H, x]
+G -> [*A]
+H -> [T)]
+
+We would have liked it to return like...
+
+B -> *
+C -> (
+D -> )
+E -> x
+T -> x
+A -> x
+T -> T Z
+Z -> B A
+T -> C Y
+Y -> T D
+A -> C Y
 -------------------------------------------

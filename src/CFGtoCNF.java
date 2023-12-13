@@ -10,7 +10,6 @@ import java.util.*;
     private String string;
     private String epselonFound = "";
 
-    // map variable with production ( variable -> production)
     private Map<String, List<String>> mapVariableProduction = new LinkedHashMap<>();
 
     public static void main(String args[]) {
@@ -50,7 +49,6 @@ import java.util.*;
     }
 
     public void convertCFGtoCNF() {
-        insertNewStartSymbol();
         convertStringtoMap();
         eliminateEpselon();
         removeDuplicateKeyValue();
@@ -108,24 +106,14 @@ import java.util.*;
             String variable = tempString[0].trim();
             String[] production = Arrays.copyOfRange(tempString, 1, tempString.length);
             List<String> productionList = new ArrayList<String>();
-            // trim the empty space
             for (int k = 0; k < production.length; k++) {
                 production[k] = production[k].trim();
             }
-            // import array into ArrayList
             for (int j = 0; j < production.length; j++) {
                 productionList.add(production[j]);
             }
-            //insert element into map
             mapVariableProduction.put(variable, productionList);
         }
-    }
-
-    private void insertNewStartSymbol() {
-        String newStart = "S0";
-        ArrayList<String> newProduction = new ArrayList<>();
-        newProduction.add("S");
-        mapVariableProduction.put(newStart, newProduction);
     }
 
     private void removeEpselon() {
@@ -147,7 +135,6 @@ import java.util.*;
                 }
             }
         }
-        // find B and eliminate them
         while (it2.hasNext()) {
             Map.Entry<String, List<String>> entry = it2.next();
             ArrayList<String> productionList = (ArrayList<String>) entry.getValue();
@@ -157,7 +144,6 @@ import java.util.*;
                 for (int j = 0; j < temp.length(); j++) {
                     if (epselonFound.equals(Character.toString(productionList.get(i).charAt(j)))) {
                         if (temp.length() == 2) {
-                            // remove specific character in string
                             temp = temp.replace(epselonFound, "");
 
                             if (!mapVariableProduction.get(entry.getKey().toString()).contains(temp)) {
@@ -321,8 +307,8 @@ import java.util.*;
                             }
                         }
                     } else if (temp.length() == 4) {
-                        String newProduction1 = temp.substring(0, 2); // SA
-                        String newProduction2 = temp.substring(2, 4); // SA
+                        String newProduction1 = temp.substring(0, 2); 
+                        String newProduction2 = temp.substring(2, 4); 
                         if (checkDuplicateInProductionList(tempList, newProduction1) && checkDuplicateInProductionList(mapVariableProduction, newProduction1)) {
                             found1 = true;
                         } else {
@@ -359,7 +345,6 @@ import java.util.*;
         Iterator<Map.Entry<String, List<String>>> it = mapVariableProduction.entrySet().iterator();
         ArrayList<String> keyList = new ArrayList<>();
         Iterator<Map.Entry<String, List<String>>> it2 = mapVariableProduction.entrySet().iterator();
-        // obtain key that use to eliminate two terminal and above
         while (it.hasNext()) {
             Map.Entry<String, List<String>> entry = (Map.Entry<String, List<String>>) it.next();
             ArrayList<String> productionRow = (ArrayList<String>) entry.getValue();
@@ -368,7 +353,6 @@ import java.util.*;
             }
         }
 
-        // find more than three terminal or combination of variable and terminal to eliminate them
         while (it2.hasNext()) {
             Map.Entry<String, List<String>> entry = (Map.Entry<String, List<String>>) it2.next();
             ArrayList<String> productionList = (ArrayList<String>) entry.getValue();
@@ -444,14 +428,14 @@ import java.util.*;
         }
     }
 
-    public String concat(String a, String b) //concatenates unique non-terminals
+    public String concat(String a, String b)
     {
         String r = a;
         r = r.concat(b);
         return r;
     }
 
-    public String search_prod(String p) //returns a concatenated String of variables which can produce string p
+    public String search_prod(String p)
     {
         int j, k;
         String r = "";
@@ -467,7 +451,7 @@ import java.util.*;
         return r;
     }
 
-    public String gen_comb(String a, String b) //creates every combination of variables from a and b . For eg: BA * AB = {BA, BB, AA, BB}
+    public String gen_comb(String a, String b)
     {
         String pri = a;
         String re = "";
@@ -475,25 +459,17 @@ import java.util.*;
             for (int j = 0; j < b.length(); j++) {
                 pri = "";
                 pri = pri + a.charAt(i) + b.charAt(j);
-                re = re + search_prod(pri); //searches if the generated productions can be created or not
+                re = re + search_prod(pri);
             }
         return re;
     }
 
-    public void trialRun() {
+    public void Run() {
         String str;
         String r;
         String pr;
-        String start = "S";
         np = mapVariableProduction.size();
-        Iterator<Map.Entry<String, List<String>>> it = mapVariableProduction.entrySet().iterator();
         ArrayList<String> keyList = new ArrayList<>();
-        while (it.hasNext()) {
-            Map.Entry<String, List<String>> entry = (Map.Entry<String, List<String>>) it.next();
-            if(entry.getKey().toString() != "S0"){
-                keyList.add(entry.getKey().toString());
-            }
-        }
         for (int i = 0; i < keyList.size(); i++) {
             gram[i][0] = keyList.get(i);
             List<String> productionList = mapVariableProduction.get(keyList.get(i));
@@ -505,7 +481,7 @@ import java.util.*;
         String st;
         str = string;
         System.out.println("String obtained: " + str);
-        for (int i = 0; i < str.length(); i++) //Assigns values to principal diagonal of matrix
+        for (int i = 0; i < str.length(); i++)
         {
             r = "";
             st = "";
@@ -521,7 +497,7 @@ import java.util.*;
             }
             matrix[i][i] = r;
         }
-        for (int k = 1; k < str.length(); k++) //Assigns values to upper half of the matrix
+        for (int k = 1; k < str.length(); k++)
         {
             for (int j = k; j < str.length(); j++) {
                 r = " ";
@@ -532,7 +508,7 @@ import java.util.*;
                 matrix[j - k][j] = r;
             }
         }
-        for (int i = 0; i < str.length(); i++) //Prints the matrix
+        for (int i = 0; i < str.length(); i++)
         {
             int k = 0;
             int l = str.length() - i - 1;
@@ -542,13 +518,6 @@ import java.util.*;
             }
             System.out.println(" ");
         }
-        for (int i = 0; i < start.length(); i++)
-            if (matrix[0][str.length() - 1].indexOf(start.charAt(i)) <= matrix[0][str.length() - 1].length()) //Checks if last element of first row contains a Start variable
-            {
-                System.out.println("String can be generated");
-                return;
-            }
-            System.out.println("String cannot be generated");
         return;
     }
 }
