@@ -33,9 +33,9 @@ public class CFGtoPDATranslator {
                 productions.put(nonTerminal, new HashSet<>(Arrays.asList(productionBody.split("\\|"))));
                 terminals.addAll(Arrays.asList(productionBody.split("\\s")));
             } else {
-                productions.put(nonTerminal, new HashSet<>(Collections.singletonList("")));
+                //productions.put(nonTerminal, new HashSet<>(Collections.singletonList("")));
                 productions.put(nonTerminal, productions.getOrDefault(nonTerminal, new HashSet<>())); // added 
-                //productions.get(nonTerminal).add(""); // added 
+                productions.get(nonTerminal).add(""); // added 
             }
         }
 
@@ -164,7 +164,7 @@ public class CFGtoPDATranslator {
         pdaStackAlphabet.add(pdaStartStackSymbol);
 
         addPDATransition(pdaTransitions, "0", "1", ".", pdaStartStackSymbol);
-        addPDATransition(pdaTransitions, "1", "2", ".", "S");
+        addPDATransition(pdaTransitions, "1", "2", ".", cfg.getStartSymbol());
 
 
         // Create the Pushdown Automaton
