@@ -131,7 +131,7 @@ public class CFGtoPDATranslator {
             String nonTerminal = entry.getKey();
             Set<String> productionSet = entry.getValue();
     
-            int stateIndex = 0;
+            int stateIndex = 1;
     
             for (String production : productionSet) {
                 // Adjust the state numbers by adding the offset
@@ -185,7 +185,7 @@ public class CFGtoPDATranslator {
                 nextState = "2"; // Transition back to start state
 
                 // Add transition for the last symbol to transition back to state 0
-                addPDATransition(transitions, (stateIndex + 2) + "", nextState, ".", stackSymbol);
+                addPDATransition(transitions, (stateIndex + 2) + "", nextState, ".", symbol);
             } else {
                 nextState = ((stateIndex + 1) + 2) + ""; // Move to the next state
             }
