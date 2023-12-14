@@ -105,7 +105,7 @@ public class CFGtoPDATranslator {
         String pdaStartStackSymbol = "!"; // Change this to whatever the initial stack symbol should be
         Set<String> pdaAcceptingStates = new HashSet<>();
     
-        int stateIndex = 1; // Start stateIndex from 1
+        int stateIndex = 0; // Start stateIndex from 1
     
         for (Map.Entry<String, Set<String>> entry : cfg.getProductions().entrySet()) {
             String nonTerminal = entry.getKey();
